@@ -33,7 +33,7 @@ def is_time_to_shutdown():
     now = datetime.now().time()
     if (int(now.hour) == int(hour)):
         if (int(now.minute) == int(minute)):
-            print("It's 23:00, time to shutdown the notebooks instance")
+            print("It's {hour}:{minute}, time to shutdown the notebooks instance")
             return True
     else:
         return False

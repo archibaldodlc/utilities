@@ -32,11 +32,10 @@ if missingConfiguration:
 def is_time_to_shutdown():
     now = datetime.now().time()
     if (int(now.hour) == int(hour)):
-        if (int(now.minute) > int(minute)):
-            print("It's over 23:00, time to shutdown the notebooks instance")
+        if (int(now.minute) == int(minute)):
+            print("It's 23:00, time to shutdown the notebooks instance")
             return True
     else:
-        print("It's not over 23:00, not time to shutdown the notebook instance")
         return False
 
 

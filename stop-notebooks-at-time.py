@@ -5,10 +5,32 @@ import boto3
 import json
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "t:m:", ["time=","minute="])
+    if len(opts) == 0:
+        raise getopt.GetoptError("No input parameters!")
+    for opt, arg in opts:
+        if opt in ("-h", "--hour"):
+            hour = int(arg)
+        if opt in ("-m", "--minute"):
+            minute = str(arg)
+except getopt.GetoptError:
+    print(usageInfo)
+    exit(1)
+
+missingConfiguration = False
+if not hour:
+    print("Missing '-h' or '--hour'")
+    missingConfiguration = True
+if not minute:
+    print("Missing '-m' or '--minute'")
+    missingConfiguration = True
+if missingConfiguration:
+    exit(2)
 
 def is_time_to_shutdown():
     now = datetime.now().time()
-    if (now.hour == 13 and now.minute > 30):
+    if (now.hour == hour and now.minute > minute):
         print("It's over 23:00, time to shutdown the notebooks instance")
         return True
     else:

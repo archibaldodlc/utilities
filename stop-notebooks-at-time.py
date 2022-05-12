@@ -5,8 +5,9 @@ import boto3
 import json
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "t:m:", ["time=","minute="])
+    opts, args = getopt.getopt(sys.argv[1:], "hh:m:", ["hour=","minute="])
     if len(opts) == 0:
         raise getopt.GetoptError("No input parameters!")
     for opt, arg in opts:
@@ -14,8 +15,8 @@ try:
             hour = int(arg)
         if opt in ("-m", "--minute"):
             minute = str(arg)
-except getopt.GetoptError:
-    print("Missing arguments")
+except getopt.GetoptError as e:
+    print(e)
     exit(1)
 
 missingConfiguration = False
@@ -30,9 +31,10 @@ if missingConfiguration:
 
 def is_time_to_shutdown():
     now = datetime.now().time()
-    if (now.hour == hour and now.minute > minute):
-        print("It's over 23:00, time to shutdown the notebooks instance")
-        return True
+    if (int(now.hour) == int(hour)):
+        if (int(now.minute) > int(minute)):
+            print("It's over 23:00, time to shutdown the notebooks instance")
+            return True
     else:
         print("It's not over 23:00, not time to shutdown the notebook instance")
         return False
@@ -44,7 +46,7 @@ def get_notebook_name():
         _logs = json.load(logs)
     return _logs['ResourceName']
 
-if (is_time_to_shutdown()==True):
+if (is_time_to_shutdown()):
     print('Closing idle notebook')
     client = boto3.client('sagemaker')
     client.stop_notebook_instance(

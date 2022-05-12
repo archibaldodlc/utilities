@@ -15,7 +15,7 @@ try:
         if opt in ("-m", "--minute"):
             minute = str(arg)
 except getopt.GetoptError:
-    print("Faltan argumentos")
+    print("Missing arguments")
     exit(1)
 
 missingConfiguration = False
